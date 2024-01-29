@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const { PORT } = require("./config/serverConfig");
 const apiRoutes = require("./routes/index");
 // const UserRepository = require("./repository/user-repository");
+const UserService = require("./services/user-service");
 
 const serverSetup = () => {
 
@@ -17,6 +18,13 @@ const serverSetup = () => {
         // const repository = new UserRepository();
         // const response = await repository.getById(5);
         // console.log(response);
+        // const user = {"email": "adam@admin.com", "id": 6};
+        // const userService = new UserService();
+        // const newUser = userService.createToken(user);
+        // console.log(newUser);
+        // const newToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkYW1AYWRtaW4uY29tIiwiaWQiOjYsImlhdCI6MTcwNjUyMDg3NCwiZXhwIjoxNzA2NTIwOTM0fQ.DZojxsvrQ4rNFNry8vkMriFjmzoBlnZ2AwsCCDNErBk"
+        // const verifyUser = userService.validateToken(newToken);
+        // console.log(verifyUser);
     });
 }
 
