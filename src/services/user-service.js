@@ -41,7 +41,6 @@ class UserService {
         // compares the encrypted password of the user with the password provided by the user
         try {
             return bcrypt.compareSync(plinePassword, userPassoord);
-            return t;
         } catch (error) {
             console.log("Something went wrong while validating the token");
             return error;
@@ -53,7 +52,6 @@ class UserService {
             // step1-> fetch the user using email
             const user = await userRepository.getByEmail(email);
             // step2-> compare the password to validate user
-            console.log(password, user.password);
             const passwordMatch = this.checkPassword(password, user.password);
             if(!passwordMatch) {
                 // password didn't matched
