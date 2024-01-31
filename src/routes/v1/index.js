@@ -5,5 +5,6 @@ const { AuthReqvalidateUser } = require("../../middlewares/index");
 
 router.post("/signup", AuthReqvalidateUser.validateUser, UserController.create);
 router.post("/signin", AuthReqvalidateUser.validateUser, UserController.signIn);
+router.get("/isAuthenticated", UserController.isAuthenticated);
 
 module.exports = router;

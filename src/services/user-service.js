@@ -27,7 +27,7 @@ class UserService {
         }
     }
 
-    validateToken(token) {
+    validateToken(token) { // this will validate the user and send the response as user object
         try {
             const response = jwt.verify(token, JWT_KEY);
             return response;
@@ -64,6 +64,23 @@ class UserService {
         } catch (error) {
             console.log("Something went wrong while validating the token");
             return error;
+        }
+    }
+
+    async isAuthenticated(token) {
+        try {
+            const response = this.validateToken(token);
+            if(!response) {
+                throw {error: "invalid token"}
+            }
+            const user = await userRepository.getById(response.id);
+            if(!user) {
+                throw {error: 'No user with the corresponding token exists'};
+            }
+            return user.id;
+        } catch (error) {
+            console.log("Something went wrong in the auth process");
+            throw error;
         }
     }
 }
