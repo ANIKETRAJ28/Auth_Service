@@ -15,11 +15,11 @@ const create = async (req, res) => {
             err: {}
         });
     } catch (error) {
-        return res.status(500).json({
+        return res.status(error.statusCode).json({
+            message: error.message,
             data: {},
-            message: "Something went wrong in user-controller layer",
             success: false,
-            err: error
+            err: error.explaination
         });
     }
 }
