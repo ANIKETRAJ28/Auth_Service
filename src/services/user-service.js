@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT_KEY } = require("../config/serverConfig");
 const AppError = require("../utils/error-handler");
+const { StatusCodes } = require("http-status-codes");
 
 const userRepository = new UserRepository();
 
@@ -13,7 +14,16 @@ class UserService {
             const response = await userRepository.create(data);
             return response;
         } catch (error) {
-            if(error.name == "SequelizeValidationError") throw error;
+            console.log("Something went wrong in user-service layer");
+            throw error;
+        }
+    }
+
+    async destroy(id) {
+        try {
+            const response = await userRepository.destroy(id);
+            return response;
+        } catch (error) {
             console.log("Something went wrong in user-service layer");
             throw error;
         }
@@ -25,17 +35,18 @@ class UserService {
             return result;
         } catch (error) {
             console.log("Something went wrong while creating the token");
-            return error;
+            throw error;
         }
     }
 
     validateToken(token) { // this will validate the user and send the response as user object
         try {
             const response = jwt.verify(token, JWT_KEY);
+            console.log(response);
             return response;
         } catch (error) {
             console.log("Something went wrong while validating the token");
-            return error;
+            throw new AppError();
         }
     }
 
@@ -45,7 +56,7 @@ class UserService {
             return bcrypt.compareSync(plinePassword, userPassoord);
         } catch (error) {
             console.log("Something went wrong while validating the token");
-            return error;
+            throw new AppError();
         }
     }
 
@@ -57,15 +68,19 @@ class UserService {
             const passwordMatch = this.checkPassword(password, user.password);
             if(!passwordMatch) {
                 // password didn't matched
-                console.log("Password doesn't match");
-                throw {error: "Incorrect password"};
+                throw new AppError(
+                    "AppError",
+                    "Password doesn't match",
+                    "Incorrect password please try again",
+                    StatusCodes.BAD_REQUEST
+                );
             }
             // step3-> generating the token for valid user
             const newJWTtoken = this.createToken({email:user.email, id:user.id});
             return newJWTtoken;
         } catch (error) {
             console.log("Something went wrong while validating the token");
-            return error;
+            throw error;
         }
     }
 
@@ -91,7 +106,7 @@ class UserService {
             const user = await userRepository.isAdmin(userId);
             return user;
         } catch (error) {
-            console.log("Something went wrong in service layeer");
+            console.log("Something went wrong in service layer");
             throw error;
         }
     }

@@ -1,6 +1,8 @@
+const { StatusCodes } = require("http-status-codes");
+
 const validateUser = (req, res, next) => {
     if(!req.body.email || !req.body.password) {
-        return res.status(400).json({
+        return res.status(StatusCodes.BAD_REQUEST).json({
             data: {},
             success: false,
             message: "Something went wrong",

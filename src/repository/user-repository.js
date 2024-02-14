@@ -1,5 +1,7 @@
+const { StatusCodes } = require("http-status-codes");
 const { User, Role } = require("../models/index");
 const ValidationError = require("../utils/validation-error");
+const AppError = require("../utils/error-handler");
 
 class UserRepository {
     
@@ -11,19 +13,34 @@ class UserRepository {
             if(error.name == "SequelizeValidationError") {
                 throw new ValidationError(error); 
             }
-
+            if(error.name == "SequelizeUniqueConstraintError") {
+                throw new ValidationError(error);
+            }
             console.log("Something went wrong in user-repository");
-            throw error;
+            throw new AppError();
         }
     }
 
     async destroy(data) {
         try {
-            const user = User.destroy(data);
-            return user;
+            const response = await User.destroy({
+                where: {
+                    id: data
+                }
+            });
+            if(!response) {
+                throw new AppError(
+                    "AppError",
+                    "Can not delete the user",
+                    "User does not exist",
+                    StatusCodes.BAD_REQUEST
+                );
+            }
+            return response;
         } catch (error) {
+            console.log(error);
             console.log("Something went wrong in user-repository");
-            return error;
+            throw error;
         }
     }
 
@@ -35,7 +52,7 @@ class UserRepository {
             return user;
         } catch (error) {
             console.log("Something went wrong in user-repository");
-            return error;
+            throw error;
         }
     }
 
@@ -50,7 +67,7 @@ class UserRepository {
             return user;
         } catch (error) {
             console.log("Something went wrong in user-repository");
-            return error;
+            throw error;
         }
     }
 
@@ -65,7 +82,7 @@ class UserRepository {
             return await user.hasRole(adminRole);
         } catch (error) {
             console.log("Something went wrong in user-repository");
-            return error;
+            throw error;
         }
     }
 }

@@ -4,7 +4,7 @@ class AppError extends Error {
     constructor(
         name = "AppError",
         message = "Something went wrong",
-        explaination = "Something went wrong",
+        explaination = "Something went wrong please try again later",
         statusCode = StatusCodes.INTERNAL_SERVER_ERROR
     ) {
         super();
