@@ -31,7 +31,7 @@ class UserService {
 
     createToken(user) {
         try {
-            const result = jwt.sign(user, JWT_KEY, { expiresIn: 60 });
+            const result = jwt.sign(user, JWT_KEY, { expiresIn: "1d" });
             return result;
         } catch (error) {
             console.log("Something went wrong while creating the token");
